@@ -58,22 +58,8 @@ AFRAME.registerComponent("markerhandler", {
       model.setAttribute("visible", true);
 
       // make description Container visible
-      var descriptionContainer = document.querySelector(
-        `#main-plane-${toy.id}`
-      );
-      descriptionContainer.setAttribute("visible", true);
-
-      // make Price Plane visible
-      var pricePlane = document.querySelector(`#price-plane-${toy.id}`);
-      pricePlane.setAttribute("visible", true);
-
-      // make Rating Plane visible
-      var ratingPlane = document.querySelector(`#rating-plane-${toy.id}`);
-      ratingPlane.setAttribute("visible", true);
-
-      // make review Plane visible
-      var reviewPlane = document.querySelector(`#review-plane-${toy.id}`);
-      reviewPlane.setAttribute("visible", true);
+      var mainPlane = document.querySelector(`#main-plane-${toy.id}`);
+      mainPlane.setAttribute("visible", true);
 
       // Changing button div visibility
       var buttonDiv = document.getElementById("button-div");
@@ -82,6 +68,7 @@ AFRAME.registerComponent("markerhandler", {
       var orderButtton = document.getElementById("order-button");
       var orderSummaryButtton = document.getElementById("order-summary-button");
       var payButton = document.getElementById("pay-button");
+      var ratingButton = document.getElementById("rating-button");
       // Handling Click Events
       orderButtton.addEventListener("click", () => {
         uid = uid.toUpperCase();
@@ -101,6 +88,8 @@ AFRAME.registerComponent("markerhandler", {
       );
 
       payButton.addEventListener("click", () => this.handlePayment());
+
+      ratingButton.addEventListener("click", () => this.handleRatings(toy));
     }
   },
   handleOrder: function(uid, toy) {
@@ -248,6 +237,34 @@ AFRAME.registerComponent("markerhandler", {
           buttons: false
         });
       });
+  },
+  handleRatings: function(toy) {
+    // Close Modal
+    document.getElementById("rating-modal-div").style.display = "flex";
+    document.getElementById("rating-input").value = "0";
+
+    var saveRatingButton = document.getElementById("save-rating-button");
+    saveRatingButton.addEventListener("click", () => {
+      document.getElementById("rating-modal-div").style.display = "none";
+      var rating = document.getElementById("rating-input").value;
+
+      firebase
+        .firestore()
+        .collection("toys")
+        .doc(toy.id)
+        .update({
+          rating: rating
+        })
+        .then(() => {
+          swal({
+            icon: "success",
+            title: "Thanks For Rating!",
+            text: "We Hope You Like Toy !!",
+            timer: 2500,
+            buttons: false
+          });
+        });
+    });
   },
   handleMarkerLost: function() {
     // Changing button div visibility
