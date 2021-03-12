@@ -203,7 +203,7 @@ AFRAME.registerComponent("markerhandler", {
 
     var td4 = document.createElement("td");
     td1.setAttribute("class", "no-line text-right");
-    td4.innerHTML = "₹" + orderSummary.total_bill;
+    td4.innerHTML = "$" + orderSummary.total_bill;
 
     totalTr.appendChild(td1);
     totalTr.appendChild(td2);
